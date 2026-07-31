@@ -15,11 +15,13 @@ import { IntakeFormsModule } from './intake-forms/intake-forms.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SectionsModule } from './sections/sections.module';
 import { RolesModule } from './roles/roles.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    HealthModule,
     AuthModule,
     WorkspacesModule,
     ProjectsModule,

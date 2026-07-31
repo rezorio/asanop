@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+/** Local Vite proxies `/api` → Nest. Production: set `VITE_API_URL` (e.g. https://asanop-api.onrender.com/api). */
+const baseURL = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL,
 })
 
 api.interceptors.request.use((config) => {

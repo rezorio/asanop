@@ -14,6 +14,8 @@
     "db:migrate": "npm run prisma:migrate -w @asanop/api",
     "db:seed": "npm run prisma:seed -w @asanop/api",
     "db:generate": "npm run prisma:generate -w @asanop/api",
-    "build": "npm run build -w @asanop/shared && npm run build -w @asanop/api && npm run build -w @asanop/web"
+    "build": "npm run build -w @asanop/shared && npm run build -w @asanop/api && npm run build -w @asanop/web",
+    "build:api": "npm run prisma:generate -w @asanop/api && npm run build -w @asanop/api",
+    "start:api:prod": "npm run start:prod -w @asanop/api"
   }
 }
