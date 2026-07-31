@@ -12,6 +12,7 @@
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:migrate": "npm run prisma:migrate -w @asanop/api",
+    "db:migrate:deploy": "npm run prisma:migrate:deploy -w @asanop/api",
     "db:seed": "npm run prisma:seed -w @asanop/api",
     "db:generate": "npm run prisma:generate -w @asanop/api",
     "build": "npm run build -w @asanop/shared && npm run build -w @asanop/api && npm run build -w @asanop/web",

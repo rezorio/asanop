@@ -21,7 +21,7 @@ You already have Postgres on Render. Finish the API service, then the Vercel fro
 **Build Command**
 
 ```bash
-npm install && npx prisma generate --schema=apps/api/prisma/schema.prisma && npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma && npm run build -w @asanop/api
+npm install && npm run prisma:generate -w @asanop/api && npm exec -w @asanop/api -- prisma migrate deploy && npm run build -w @asanop/api
 ```
 
 **Start Command**
