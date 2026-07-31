@@ -30,6 +30,8 @@ npm install && npm run prisma:generate -w @asanop/api && npm exec -w @asanop/api
 npm run start:prod -w @asanop/api
 ```
 
+If the service still cannot find `dist/main`, push the latest commit (includes a start script that also checks `dist/src/main.js`).
+
 4. **Environment** variables:
 
 | Key | Value |
