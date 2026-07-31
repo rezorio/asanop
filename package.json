@@ -1,0 +1,19 @@
+{
+  "name": "asanop",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev -w @asanop/api",
+    "dev:web": "npm run dev -w @asanop/web",
+    "dev": "npm run dev:api & npm run dev:web",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "npm run prisma:migrate -w @asanop/api",
+    "db:seed": "npm run prisma:seed -w @asanop/api",
+    "db:generate": "npm run prisma:generate -w @asanop/api",
+    "build": "npm run build -w @asanop/shared && npm run build -w @asanop/api && npm run build -w @asanop/web"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules
+dist
+.dist
+.env
+.env.local
+*.log
+.DS_Store
+coverage
+.turbo
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+apps/api/uploads
+.vscode/*
+!.vscode/extensions.json
