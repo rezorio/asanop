@@ -6,7 +6,24 @@ import { seedDemoBoard } from './seed/demo.seed'
 
 const prisma = new PrismaClient()
 
+function describeDatabaseUrl(url: string | undefined) {
+  if (!url) return '(DATABASE_URL not set)'
+  try {
+    const parsed = new URL(url)
+    return `${parsed.hostname}${parsed.pathname}`
+  } catch {
+    return '(unparseable DATABASE_URL)'
+  }
+}
+
 async function main() {
+  const force = process.env.SEED_FORCE === '1' || process.env.SEED_FORCE === 'true'
+  console.log(`Seeding database: ${describeDatabaseUrl(process.env.DATABASE_URL)}`)
+  if (force) {
+    console.log('SEED_FORCE=1 — will wipe and recreate the Asanop Demo board.')
+  }
+  console.log('')
+
   const results = await seedWorkmates(prisma)
   const created = results.filter((r) => r.created).length
   const skipped = results.length - created
@@ -18,11 +35,12 @@ async function main() {
   }
 
   console.log('')
-  const demo = await seedDemoBoard(prisma)
+  const demo = await seedDemoBoard(prisma, { force })
   if (demo.skipped) {
     console.log(
       `Demo board: already rich (${demo.taskCount} tasks, ${demo.sectionCount} sections) — skipped recreate.`,
     )
+    console.log('To rebuild tasks/forms/etc., run with SEED_FORCE=1')
   } else {
     console.log(`Demo board: "${demo.projectName}"`)
     console.log(`  Tasks:         ${demo.taskCount}`)

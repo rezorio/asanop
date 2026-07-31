@@ -93,7 +93,9 @@ async function hasCompleteRichSeed(
 
 export async function seedDemoBoard(
   prisma: PrismaClient,
+  options?: { force?: boolean },
 ): Promise<DemoSeedResult> {
+  const force = options?.force === true
   const passwordHash = await bcrypt.hash(SEED_PASSWORD, 10)
   const ownerEmail = DEMO_OWNER.email.toLowerCase()
 
@@ -194,6 +196,7 @@ export async function seedDemoBoard(
   })
 
   if (
+    !force &&
     existingProject &&
     (await hasCompleteRichSeed(prisma, workspace.id, existingProject.id))
   ) {
@@ -224,7 +227,7 @@ export async function seedDemoBoard(
   const projectCount = await prisma.project.count({
     where: { workspaceId: workspace.id },
   })
-  if (existingProject || projectCount > 0) {
+  if (force || existingProject || projectCount > 0) {
     await wipeDemoWorkspaceContent(prisma, workspace.id)
   }
 

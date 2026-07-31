@@ -47,18 +47,32 @@ Render sets `PORT` for you — do not override unless you know you need to.
 5. **Create Web Service** and wait for a green deploy.
 6. Open `https://YOUR-SERVICE.onrender.com/api/health` — you should see `{ "ok": true, ... }`.
 
-### Optional: seed demo users
+### Optional: seed full demo (accounts + tasks + forms)
 
-From your PC (use the Postgres **External** URL once):
+This loads the same rich demo as local: workmates, Product launch project, sections, many tasks, comments, forms, automations, invites, notifications.
 
-```bash
-# in apps/api/.env set DATABASE_URL to the External URL temporarily
-npm run prisma:seed -w @asanop/api
+From your PC (use the Postgres **External** URL once).
+
+**PowerShell** (Windows):
+
+1. Render → your Postgres → **Connections** → copy **External Database URL**.
+2. In the project folder:
+
+```powershell
+cd "C:\Users\barke\Desktop\AI CODING\SaaS Projects\asanop"
+$env:DATABASE_URL="PASTE_EXTERNAL_DATABASE_URL_HERE"
+npm run prisma:seed:force -w @asanop/api
 ```
 
-Demo login (if seed succeeds): `demo@asanop.dev` / `password123`
+Confirm the log shows a **Render hostname** (not `localhost`), then counts like `Tasks: 40+`, sections, forms, etc.
 
-Then set the service `DATABASE_URL` back to the **Internal** URL if you changed it.
+3. Log in on the live site with:
+   - Email: `demo@asanop.dev`
+   - Password: `password123`
+
+Keep the Web Service `DATABASE_URL` as the **Internal** URL. Only use External for this one-off seed from your laptop.
+
+Use `prisma:seed:force` if you already seeded accounts only (or a thin board) and want the full demo wiped/recreated.
 
 ---
 
