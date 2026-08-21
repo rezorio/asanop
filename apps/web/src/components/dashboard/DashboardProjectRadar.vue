@@ -16,41 +16,52 @@ const healthLabel = {
 } as const
 
 const healthClass = {
-  at_risk: 'border-danger/30 bg-danger/5',
-  active: 'border-brand/30 bg-brand-soft/30',
-  complete: 'border-done/30 bg-done-soft/40',
-  idle: 'border-line bg-canvas/40',
+  at_risk: 'border-danger/25 bg-danger/5',
+  active: 'border-brand/25 bg-brand-soft/20',
+  complete: 'border-done/25 bg-done-soft/25',
+  idle: 'border-line bg-canvas/45',
+} as const
+
+const healthDot = {
+  at_risk: 'bg-danger',
+  active: 'bg-brand',
+  complete: 'bg-done',
+  idle: 'bg-muted',
 } as const
 </script>
 
 <template>
-  <section>
-    <div class="mb-2 flex items-center justify-between gap-2">
-      <h2 class="section-title">Project radar</h2>
-      <span class="text-xs text-muted">{{ projects.length }} projects</span>
-    </div>
+  <section class="panel overflow-hidden">
+    <header class="dashboard-panel-header">
+      <div>
+        <p class="dashboard-kicker">Portfolio health</p>
+        <h2 class="section-title">Project radar</h2>
+      </div>
+      <span class="dashboard-header-meta">{{ projects.length }} projects</span>
+    </header>
 
-    <div v-if="!projects.length" class="rounded-lg border border-dashed border-line px-4 py-8 text-center text-sm text-muted">
+    <div v-if="!projects.length" class="m-4 rounded-lg border border-dashed border-line px-4 py-8 text-center text-sm text-muted">
       No projects yet.
     </div>
 
-    <div v-else class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <div v-else class="grid gap-3 p-3 sm:grid-cols-2 xl:grid-cols-3">
       <RouterLink
         v-for="row in projects"
         :key="row.project.id"
         :to="{ name: 'project', params: { projectId: row.project.id } }"
-        class="panel block p-4 transition hover:border-brand/40 hover:shadow-md"
+        class="block rounded-xl border p-4 transition hover:-translate-y-0.5 hover:border-brand/40 hover:bg-surface hover:shadow-md"
         :class="healthClass[row.health]"
       >
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0">
             <p class="truncate font-display font-semibold text-charcoal">{{ row.project.name }}</p>
-            <p class="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-muted">
+            <p class="mt-1 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-muted">
+              <span class="h-1.5 w-1.5 rounded-full" :class="healthDot[row.health]" aria-hidden="true" />
               {{ healthLabel[row.health] }}
             </p>
           </div>
           <div
-            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-xs font-bold text-charcoal"
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-4 border-surface bg-surface/80 text-xs font-bold text-charcoal shadow-sm"
           >
             {{ row.percentComplete }}%
           </div>

@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import AppAlert from '@/components/ui/AppAlert.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -41,6 +43,9 @@ async function submit() {
     />
 
     <div class="panel relative p-8">
+      <RouterLink :to="{ name: 'home' }" class="mb-7 inline-flex items-center gap-2 font-display text-sm font-semibold text-brand hover:text-brand-hover">
+        <span aria-hidden="true">←</span> Back to Asanop
+      </RouterLink>
       <p class="font-display text-overline uppercase tracking-wider text-accent">Welcome back</p>
       <h1 class="mt-2 text-brand-mark">Asanop</h1>
       <p class="page-subtitle">Sign in to manage tasks and teams</p>
@@ -54,10 +59,10 @@ async function submit() {
           <label class="label">Password</label>
           <input v-model="password" type="password" required minlength="8" class="field" />
         </div>
-        <p v-if="error" class="text-sm text-danger">{{ error }}</p>
-        <button type="submit" class="btn-primary w-full" :disabled="loading">
+        <AppAlert v-if="error" tone="danger">{{ error }}</AppAlert>
+        <AppButton type="submit" class="w-full" :loading="loading">
           {{ loading ? 'Signing in…' : 'Sign in' }}
-        </button>
+        </AppButton>
       </form>
 
       <p class="mt-6 text-sm text-muted">

@@ -10,9 +10,9 @@ const props = defineProps<{
 }>()
 
 const stroke: Record<TimelineDependencyLink['kind'], string> = {
-  ok: '#64748b',
-  open: '#0284c7',
-  conflict: '#dc2626',
+  ok: 'var(--color-todo)',
+  open: 'var(--color-progress)',
+  conflict: 'var(--color-danger)',
 }
 
 function linkOpacity(link: TimelineDependencyLink) {
@@ -56,7 +56,7 @@ function linkWidth(link: TimelineDependencyLink) {
         orient="auto"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="#64748b" />
+        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="var(--color-todo)" />
       </marker>
       <marker
         id="timeline-arrow-open"
@@ -67,7 +67,7 @@ function linkWidth(link: TimelineDependencyLink) {
         orient="auto"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="#0284c7" />
+        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="var(--color-progress)" />
       </marker>
       <marker
         id="timeline-arrow-conflict"
@@ -78,7 +78,7 @@ function linkWidth(link: TimelineDependencyLink) {
         orient="auto"
         markerUnits="userSpaceOnUse"
       >
-        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="#dc2626" />
+        <path d="M0,0.5 L5,3 L0,5.5 Z" fill="var(--color-danger)" />
       </marker>
     </defs>
 

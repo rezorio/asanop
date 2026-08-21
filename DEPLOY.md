@@ -47,9 +47,13 @@ Render sets `PORT` for you — do not override unless you know you need to.
 5. **Create Web Service** and wait for a green deploy.
 6. Open `https://YOUR-SERVICE.onrender.com/api/health` — you should see `{ "ok": true, ... }`.
 
-### Optional: seed full demo (accounts + tasks + forms)
+### Automatic first-deploy demo seed
 
 This loads the same rich demo as local: workmates, Product launch project, sections, many tasks, comments, forms, automations, invites, notifications.
+
+The Render Blueprint now runs `prisma:seed:deploy` after migrations. It creates this demo when the online database is new and skips recreation when the complete demo already exists. It never enables `SEED_FORCE`, so normal deployments do not reset the demo workspace or touch user-created workspaces.
+
+### Intentionally refresh the online demo
 
 From your PC (use the Postgres **External** URL once).
 
@@ -61,7 +65,8 @@ From your PC (use the Postgres **External** URL once).
 ```powershell
 cd "C:\Users\barke\Desktop\AI CODING\SaaS Projects\asanop"
 $env:DATABASE_URL="PASTE_EXTERNAL_DATABASE_URL_HERE"
-npm run prisma:seed:force -w @asanop/api
+$env:SEED_CONFIRM="RESET_ASANOP_DEMO"
+npm run db:seed:refresh-demo
 ```
 
 Confirm the log shows a **Render hostname** (not `localhost`), then counts like `Tasks: 40+`, sections, forms, etc.
@@ -70,9 +75,9 @@ Confirm the log shows a **Render hostname** (not `localhost`), then counts like 
    - Email: `demo@asanop.dev`
    - Password: `password123`
 
-Keep the Web Service `DATABASE_URL` as the **Internal** URL. Only use External for this one-off seed from your laptop.
+Keep the Web Service `DATABASE_URL` as the **Internal** URL. Only use External for this one-off refresh from your laptop. The confirmation phrase is required for remote databases. The refresh only recreates content inside the seeded `asanop-demo` workspace; it does not delete other users or workspaces.
 
-Use `prisma:seed:force` if you already seeded accounts only (or a thin board) and want the full demo wiped/recreated.
+Use `npm run db:seed:refresh-demo` only when you intentionally want the seeded demo workspace wiped and recreated.
 
 ---
 
@@ -108,7 +113,16 @@ Use `prisma:seed:force` if you already seeded accounts only (or a thin board) an
 
 ---
 
-## 4. Share with friends
+## 4. Public and application routes
+
+- `/` is the public product homepage.
+- Authenticated views live below `/app`.
+- Older `/dashboard`, `/calendar`, `/projects/:id`, and related links redirect to their `/app/*` equivalents.
+- Vercel's catch-all rewrite in `apps/web/vercel.json` must remain enabled for direct navigation.
+
+After deployment, verify the homepage metadata, logged-out registration CTA, logged-in **Open app** CTA, protected-route redirect, and one old compatibility URL.
+
+## 5. Share with friends
 
 Send the **Vercel** URL only.
 

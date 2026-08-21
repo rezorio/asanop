@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import {
@@ -31,6 +31,8 @@ const mobileNavOpen = ref(false)
 const newName = ref('')
 const creating = ref(false)
 const error = ref('')
+const menuButtonEl = ref<HTMLButtonElement | null>(null)
+const mobileNavEl = ref<HTMLElement | null>(null)
 
 const workspaceOptions = computed(() => auth.workspaces)
 
@@ -85,6 +87,10 @@ function closeMobileNav() {
   mobileNavOpen.value = false
 }
 
+function onGlobalKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && mobileNavOpen.value) closeMobileNav()
+}
+
 watch(
   () => route.fullPath,
   () => {
@@ -94,9 +100,17 @@ watch(
 
 watch(mobileNavOpen, (open) => {
   document.body.style.overflow = open ? 'hidden' : ''
+  if (open) {
+    void nextTick(() => mobileNavEl.value?.querySelector<HTMLElement>('button, a, input')?.focus())
+  } else {
+    menuButtonEl.value?.focus()
+  }
 })
 
+onMounted(() => window.addEventListener('keydown', onGlobalKeydown))
+
 onUnmounted(() => {
+  window.removeEventListener('keydown', onGlobalKeydown)
   document.body.style.overflow = ''
 })
 </script>
@@ -108,9 +122,12 @@ onUnmounted(() => {
       class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-sm lg:hidden"
     >
       <button
+        ref="menuButtonEl"
         type="button"
         class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-charcoal hover:bg-canvas"
         aria-label="Open menu"
+        :aria-expanded="mobileNavOpen"
+        aria-controls="app-navigation"
         @click="mobileNavOpen = true"
       >
         <Menu class="h-5 w-5" />
@@ -140,13 +157,20 @@ onUnmounted(() => {
     />
 
     <aside
+      id="app-navigation"
+      ref="mobileNavEl"
       class="fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(100%,280px)] max-w-full -translate-x-full flex-col overflow-hidden border-r border-sidebar-border bg-sidebar px-4 py-5 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-screen lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
       :class="mobileNavOpen ? 'translate-x-0' : ''"
     >
       <div class="mb-6 flex shrink-0 items-start justify-between gap-2 lg:mb-8">
         <div>
-          <p class="font-display text-[1.75rem] font-semibold tracking-tight text-white">Asanop</p>
-          <p class="mt-1 font-sans text-body-sm text-sidebar-text">Delegate work, stay aligned</p>
+          <div class="flex items-center gap-2.5">
+            <span class="inline-flex h-8 w-8 -rotate-3 items-center justify-center rounded-[10px] bg-sidebar-active text-white shadow-sm">
+              <CheckSquare class="h-4 w-4" aria-hidden="true" />
+            </span>
+            <p class="font-display text-[1.6rem] font-semibold tracking-tight text-white">Asanop</p>
+          </div>
+          <p class="mt-1.5 font-sans text-sm text-sidebar-text">Delegate work, stay aligned</p>
         </div>
         <div class="flex items-center gap-1">
           <div class="hidden lg:block">

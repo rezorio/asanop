@@ -5,6 +5,12 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/HomeView.vue'),
+      meta: { public: true },
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/LoginView.vue'),
@@ -27,7 +33,7 @@ const router = createRouter({
       component: () => import('@/views/PublicFormView.vue'),
     },
     {
-      path: '/',
+      path: '/app',
       component: () => import('@/layouts/AppLayout.vue'),
       meta: { requiresAuth: true },
       children: [
@@ -86,6 +92,35 @@ const router = createRouter({
         },
       ],
     },
+    ...[
+      'dashboard',
+      'my-tasks',
+      'calendar',
+      'timeline',
+      'forms',
+      'automations',
+      'members',
+    ].map((path) => ({
+      path: `/${path}`,
+      redirect: `/${path === 'dashboard' ? 'app/dashboard' : `app/${path}`}`,
+    })),
+    {
+      path: '/forms/:formId',
+      redirect: (to) => `/app/forms/${String(to.params.formId)}`,
+    },
+    {
+      path: '/projects/:projectId',
+      redirect: (to) => `/app/projects/${String(to.params.projectId)}`,
+    },
+    ...(import.meta.env.DEV
+      ? [
+          {
+            path: '/dev/components',
+            name: 'component-gallery',
+            component: () => import('@/views/ComponentGalleryView.vue'),
+          },
+        ]
+      : []),
   ],
 })
 
@@ -102,7 +137,8 @@ router.beforeEach(async (to) => {
       await auth.loadWorkspaces()
     } catch {
       auth.logout()
-      return { name: 'login' }
+      if (to.meta.requiresAuth) return { name: 'login' }
+      return true
     }
   }
   return true
