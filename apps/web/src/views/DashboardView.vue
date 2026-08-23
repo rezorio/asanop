@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { CheckCircle2, CircleAlert, Clock3, Layers3, Plus, Users } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import { cachedGet } from '@/lib/api'
 import type { Project, WorkspaceDashboard } from '@/types'
 import CreateProjectModal from '@/components/CreateProjectModal.vue'
 import DashboardHealthRibbon from '@/components/dashboard/DashboardHealthRibbon.vue'
@@ -13,6 +13,7 @@ import MetricCard from '@/components/dashboard/MetricCard.vue'
 import WorkloadByAssignee from '@/components/dashboard/WorkloadByAssignee.vue'
 import AppAlert from '@/components/ui/AppAlert.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 import { hasPermission } from '@/lib/permissions'
 
 const auth = useAuthStore()
@@ -38,7 +39,7 @@ async function load() {
   loading.value = true
   error.value = ''
   try {
-    const { data: dashRes } = await api.get<WorkspaceDashboard>(
+    const { data: dashRes } = await cachedGet<WorkspaceDashboard>(
       `/workspaces/${auth.activeWorkspace.id}/dashboard`,
     )
     data.value = dashRes
@@ -88,9 +89,7 @@ onMounted(load)
     </PageHeader>
 
     <AppAlert v-if="error" tone="danger">{{ error }}</AppAlert>
-    <div v-if="loading && !data" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Loading dashboard">
-      <div v-for="index in 4" :key="index" class="h-28 animate-pulse rounded-xl border border-line bg-surface/70" />
-    </div>
+    <AppSkeleton v-if="loading && !data" variant="dashboard" label="Loading dashboard" />
 
     <template v-if="data">
       <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Workspace metrics">

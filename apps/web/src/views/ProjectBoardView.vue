@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import api, { cachedGet } from '@/lib/api'
 import type { Project, ProjectSection, Task, TaskStatus, WorkspaceMember } from '@/types'
 import TaskDetailDrawer from '@/components/TaskDetailDrawer.vue'
 import CreateTaskModal from '@/components/CreateTaskModal.vue'
@@ -13,6 +13,7 @@ import ProjectBoardCard from '@/components/project/ProjectBoardCard.vue'
 import { useProjectTaskBrowser } from '@/composables/useProjectTaskBrowser'
 import { STATUS_COLUMN_CLASS } from '@/lib/uiStyles'
 import { hasPermission } from '@/lib/permissions'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -81,10 +82,10 @@ async function load() {
   error.value = ''
   try {
     const [projectRes, taskRes, memberRes, sectionRes] = await Promise.all([
-      api.get<Project>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}`),
-      api.get<Task[]>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}/tasks`),
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
-      api.get<ProjectSection[]>(
+      cachedGet<Project>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}`),
+      cachedGet<Task[]>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}/tasks`),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
+      cachedGet<ProjectSection[]>(
         `/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}/sections`,
       ),
     ])
@@ -342,7 +343,7 @@ onMounted(load)
     </template>
 
     <template v-else>
-      <p v-if="loading" class="text-muted">Loading tasks…</p>
+      <AppSkeleton v-if="loading" :rows="7" label="Loading project tasks" />
 
       <div v-else class="space-y-4">
         <ProjectListToolbar

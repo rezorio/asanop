@@ -39,13 +39,16 @@ If the service still cannot find `dist/main`, push the latest commit (includes a
 | `DATABASE_URL` | Your Postgres **Internal** Database URL (from the DB → Connections) |
 | `JWT_SECRET` | Long random string |
 | `JWT_EXPIRES_IN` | `7d` |
+| `WEB_CONCURRENCY` | `1` on the free instance; raise only after measuring memory/database connections |
 | `WEB_ORIGIN` | Temporarily `http://localhost:5173` — update after Vercel |
 | `NODE_VERSION` | `20` |
 
 Render sets `PORT` for you — do not override unless you know you need to.
 
 5. **Create Web Service** and wait for a green deploy.
-6. Open `https://YOUR-SERVICE.onrender.com/api/health` — you should see `{ "ok": true, ... }`.
+6. Open `https://YOUR-SERVICE.onrender.com/api/health/ready` — you should see `{ "ok": true, "database": "ready", ... }`.
+
+`/api/health/live` checks only the API process. `/api/health/ready` checks PostgreSQL and is the load-balancer health endpoint. Multi-worker balancing is opt-in through `WEB_CONCURRENCY`; multi-instance scaling is not safe while attachments remain on the API's local filesystem. See [docs/PERFORMANCE_AND_SCALING.md](./docs/PERFORMANCE_AND_SCALING.md).
 
 ### Automatic first-deploy demo seed
 

@@ -2,7 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Plus, Trash2 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import api, { cachedGet } from '@/lib/api'
 import type {
   AutomationAction,
   AutomationRule,
@@ -14,6 +14,7 @@ import type {
 import { STATUSES, STATUS_LABELS } from '@/types'
 import AppSelect from '@/components/AppSelect.vue'
 import { hasPermission } from '@/lib/permissions'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const rules = ref<AutomationRule[]>([])
@@ -91,9 +92,9 @@ async function load() {
   error.value = ''
   try {
     const [rulesRes, projectsRes, membersRes] = await Promise.all([
-      api.get<AutomationRule[]>(`/workspaces/${auth.activeWorkspace.id}/automations`),
-      api.get<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`),
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
+      cachedGet<AutomationRule[]>(`/workspaces/${auth.activeWorkspace.id}/automations`),
+      cachedGet<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`, { cacheTtlMs: 60_000 }),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
     ])
     rules.value = rulesRes.data
     projects.value = projectsRes.data
@@ -179,7 +180,7 @@ onMounted(load)
     </div>
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="mb-4 text-muted">Loading…</p>
+    <AppSkeleton v-if="loading" :rows="5" label="Loading automations" />
 
     <form
       v-if="canManage"

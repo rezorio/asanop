@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import { cachedGet } from '@/lib/api'
 import type { Project, Task, WorkspaceMember } from '@/types'
 import TaskDetailDrawer from '@/components/TaskDetailDrawer.vue'
 import CalendarToolbar from '@/components/calendar/CalendarToolbar.vue'
@@ -21,6 +21,7 @@ import {
 } from '@/lib/calendar/dates'
 import { getDueUrgency } from '@/lib/taskDue'
 import { hasPermission } from '@/lib/permissions'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const DESKTOP_MQ = '(min-width: 768px)'
 
@@ -128,14 +129,14 @@ async function load() {
   try {
     const { start, end } = range.value
     const [taskRes, memberRes, projectRes] = await Promise.all([
-      api.get<CalendarTask[]>(`/workspaces/${auth.activeWorkspace.id}/calendar`, {
+      cachedGet<CalendarTask[]>(`/workspaces/${auth.activeWorkspace.id}/calendar`, {
         params: {
           from: start.toISOString(),
           to: end.toISOString(),
         },
       }),
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
-      api.get<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
+      cachedGet<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`, { cacheTtlMs: 60_000 }),
     ])
     tasks.value = taskRes.data
     members.value = memberRes.data
@@ -200,7 +201,7 @@ onUnmounted(() => {
     />
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="mb-4 text-sm text-muted">Loading calendar…</p>
+    <AppSkeleton v-if="loading" variant="dashboard" label="Loading calendar" />
 
     <CalendarMobileAgenda
       v-if="!isDesktopCalendar"

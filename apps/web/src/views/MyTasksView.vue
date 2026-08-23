@@ -2,12 +2,13 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { CheckCircle2 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import { cachedGet } from '@/lib/api'
 import type { MyTasksBuckets, Task, WorkspaceMember } from '@/types'
 import TaskDetailDrawer from '@/components/TaskDetailDrawer.vue'
 import MyTasksFocus from '@/components/my-tasks/MyTasksFocus.vue'
 import MyTaskRow from '@/components/my-tasks/MyTaskRow.vue'
 import type { TaskUrgency } from '@/components/my-tasks/MyTaskRow.vue'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 type FilterKey = 'focus' | 'upcoming' | 'all'
 
@@ -89,8 +90,8 @@ async function load() {
   loading.value = true
   try {
     const [tasksRes, membersRes] = await Promise.all([
-      api.get<MyTasksBuckets>(`/workspaces/${auth.activeWorkspace.id}/my-tasks`),
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
+      cachedGet<MyTasksBuckets>(`/workspaces/${auth.activeWorkspace.id}/my-tasks`),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
     ])
     buckets.value = tasksRes.data
     members.value = membersRes.data
@@ -144,7 +145,7 @@ onMounted(load)
       @open-task="selectedTaskId = $event"
     />
 
-    <p v-if="loading" class="text-muted">Loading your tasks…</p>
+    <AppSkeleton v-if="loading" :rows="6" label="Loading your tasks" />
 
     <template v-else>
       <div v-if="!visibleTaskCount" class="panel flex flex-col items-center px-6 py-12 text-center">

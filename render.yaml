@@ -11,7 +11,7 @@ services:
     rootDir: .
     buildCommand: npm install && npm run prisma:generate -w @asanop/api && npm exec -w @asanop/api -- prisma migrate deploy && npm run prisma:seed:deploy -w @asanop/api && npm run build -w @asanop/api
     startCommand: npm run start:prod -w @asanop/api
-    healthCheckPath: /api/health
+    healthCheckPath: /api/health/ready
     envVars:
       - key: NODE_VERSION
         value: "20"
@@ -19,6 +19,10 @@ services:
         value: production
       - key: JWT_EXPIRES_IN
         value: 7d
+      # One worker fits the free instance. Raise only after measuring memory and
+      # moving attachments to shared object storage.
+      - key: WEB_CONCURRENCY
+        value: "1"
       - key: JWT_SECRET
         generateValue: true
       - key: WEB_ORIGIN

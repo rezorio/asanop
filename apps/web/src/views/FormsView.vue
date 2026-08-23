@@ -3,10 +3,11 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Check, Copy, Plus } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import api, { cachedGet } from '@/lib/api'
 import type { IntakeForm, Project } from '@/types'
 import AppSelect from '@/components/AppSelect.vue'
 import { hasPermission } from '@/lib/permissions'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const forms = ref<IntakeForm[]>([])
@@ -33,8 +34,8 @@ async function load() {
   error.value = ''
   try {
     const [formsRes, projectsRes] = await Promise.all([
-      api.get<IntakeForm[]>(`/workspaces/${auth.activeWorkspace.id}/forms`),
-      api.get<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`),
+      cachedGet<IntakeForm[]>(`/workspaces/${auth.activeWorkspace.id}/forms`),
+      cachedGet<Project[]>(`/workspaces/${auth.activeWorkspace.id}/projects`, { cacheTtlMs: 60_000 }),
     ])
     forms.value = formsRes.data
     projects.value = projectsRes.data
@@ -105,7 +106,7 @@ onMounted(load)
     </div>
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="mb-4 text-muted">Loading…</p>
+    <AppSkeleton v-if="loading" :rows="4" label="Loading intake forms" />
 
     <form
       v-if="canManage"

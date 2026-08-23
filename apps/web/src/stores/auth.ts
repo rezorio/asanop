@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import api from '@/lib/api'
+import api, { clearMemoryCache } from '@/lib/api'
 import type { User, Workspace } from '@/types'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -21,6 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   )
 
   function persistSession(accessToken: string, nextUser: User) {
+    clearMemoryCache()
     token.value = accessToken
     user.value = nextUser
     localStorage.setItem('asanop_token', accessToken)
@@ -51,11 +52,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function setWorkspace(id: string) {
+    clearMemoryCache()
     activeWorkspaceId.value = id
     localStorage.setItem('asanop_workspace', id)
   }
 
   function logout() {
+    clearMemoryCache()
     token.value = null
     user.value = null
     workspaces.value = []

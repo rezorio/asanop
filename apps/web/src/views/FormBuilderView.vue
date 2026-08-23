@@ -16,6 +16,7 @@ import type {
 import { STATUSES, STATUS_LABELS } from '@/types'
 import AppSelect from '@/components/AppSelect.vue'
 import { hasPermission } from '@/lib/permissions'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -228,7 +229,7 @@ onMounted(load)
     </div>
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="text-muted">Loading…</p>
+    <AppSkeleton v-if="loading" variant="editor" label="Loading form builder" />
 
     <template v-else-if="form">
       <section class="panel mb-8 space-y-4 p-4">

@@ -11,6 +11,8 @@ The product is in a free public beta. Billing, transactional invite email, analy
 - `packages/shared` — shared status and role types
 - Vercel hosts the web client; Render hosts the API and PostgreSQL in the documented production setup.
 
+Start with [docs/SYSTEM_OVERVIEW.md](./docs/SYSTEM_OVERVIEW.md) for the maintained product, architecture, data-flow, permissions, and operational map.
+
 Public routes live at `/`, `/login`, `/register`, `/invite/:token`, and `/f/:token`. Authenticated product routes live under `/app`. Compatibility redirects preserve the earlier top-level product URLs.
 
 ## Local setup
@@ -62,6 +64,8 @@ The seed creates a realistic workspace with projects, sections, tasks, comments,
 Asanop is designed for teams of roughly 3–25 people. The interface uses a warm editorial marketing layer and a denser, consistent application layer. Repeated controls should use shared components and semantic tokens rather than page-specific class collections.
 
 See [docs/DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) for reference research, tokens, component conventions, responsiveness, accessibility requirements, and the visual QA checklist.
+
+See [docs/PERFORMANCE_AND_SCALING.md](./docs/PERFORMANCE_AND_SCALING.md) for skeleton states, browser memory caching, readiness checks, worker balancing, and the limits on horizontal scaling.
 
 ## Known beta limitations
 

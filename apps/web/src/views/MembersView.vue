@@ -2,12 +2,13 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import api, { cachedGet } from '@/lib/api'
 import type { Invite, Permission, WorkspaceMember, WorkspaceRole } from '@/types'
 import { ALL_PERMISSIONS, PERMISSION_LABELS } from '@/types'
 import { hasPermission } from '@/lib/permissions'
 import AppSelect from '@/components/AppSelect.vue'
 import { Copy, Check } from 'lucide-vue-next'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -58,8 +59,8 @@ async function load() {
   error.value = ''
   try {
     const [memberRes, rolesRes] = await Promise.all([
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
-      api.get<WorkspaceRole[]>(`/workspaces/${auth.activeWorkspace.id}/roles`),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
+      cachedGet<WorkspaceRole[]>(`/workspaces/${auth.activeWorkspace.id}/roles`, { cacheTtlMs: 60_000 }),
     ])
     members.value = memberRes.data
     roles.value = rolesRes.data
@@ -68,7 +69,7 @@ async function load() {
       inviteRoleId.value = contributor?.id ?? roles.value.find((r) => r.key !== 'project_manager')?.id ?? ''
     }
     if (canInvite.value) {
-      const inviteRes = await api.get<Invite[]>(
+      const inviteRes = await cachedGet<Invite[]>(
         `/workspaces/${auth.activeWorkspace.id}/invites`,
       )
       invites.value = inviteRes.data
@@ -249,7 +250,7 @@ onMounted(load)
     </div>
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="text-muted">Loading…</p>
+    <AppSkeleton v-if="loading" :rows="7" label="Loading members and roles" />
 
     <section class="mb-10">
       <h2 class="section-title mb-3">Team</h2>

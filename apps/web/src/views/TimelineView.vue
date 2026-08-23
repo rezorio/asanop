@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/lib/api'
+import api, { cachedGet } from '@/lib/api'
 import type { Task, WorkspaceMember } from '@/types'
 import TaskDetailDrawer from '@/components/TaskDetailDrawer.vue'
 import TimelineToolbar from '@/components/timeline/TimelineToolbar.vue'
@@ -14,6 +14,7 @@ import {
   toDateInput,
 } from '@/lib/timeline/geometry'
 import type { DependencyDisplayMode, TimelineTask } from '@/lib/timeline/types'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 type DragState = {
   taskId: string
@@ -284,13 +285,13 @@ async function load() {
   error.value = ''
   try {
     const [taskRes, memberRes] = await Promise.all([
-      api.get<TimelineTask[]>(`/workspaces/${auth.activeWorkspace.id}/timeline`, {
+      cachedGet<TimelineTask[]>(`/workspaces/${auth.activeWorkspace.id}/timeline`, {
         params: {
           from: rangeStart.value.toISOString(),
           to: rangeEnd.value.toISOString(),
         },
       }),
-      api.get<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
     ])
     tasks.value = taskRes.data
     members.value = memberRes.data
@@ -371,7 +372,7 @@ watch(shellEl, (el) => {
     />
 
     <p v-if="error" class="mb-4 text-sm text-danger">{{ error }}</p>
-    <p v-if="loading" class="mb-4 text-sm text-muted">Loading timeline…</p>
+    <AppSkeleton v-if="loading" variant="dashboard" label="Loading timeline" />
 
     <TimelineMobileSchedule
       v-if="!isDesktopTimeline"

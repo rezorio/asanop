@@ -16,6 +16,7 @@ import { extractMentionQuery, segmentCommentBody } from '@/lib/mentions'
 import StatusBadge from '@/components/ui/StatusBadge.vue'
 import PriorityBadge from '@/components/ui/PriorityBadge.vue'
 import AppSelect from '@/components/AppSelect.vue'
+import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const props = defineProps<{
   workspaceId: string
@@ -460,7 +461,7 @@ onMounted(load)
         </button>
       </div>
 
-      <p v-if="loading" class="text-muted">Loading…</p>
+      <AppSkeleton v-if="loading" variant="editor" label="Loading task details" />
 
       <!-- Editor form -->
       <form v-else-if="canEdit" class="space-y-4" @submit.prevent="save">
