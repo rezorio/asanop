@@ -2,16 +2,17 @@
 
 ## Direction
 
-Asanop uses a warm editorial direction for public storytelling and a calm, efficient product interface. The personality should feel capable, human, and composed—not playful to the point of distraction and not like a direct clone of another work-management product.
+Asanop uses the **Ascent** theme: an editorial journey metaphor for public storytelling and a calm, efficient product interface. The personality should feel capable, human, optimistic, and composed—not playful to the point of distraction and not like a direct clone of another product.
 
 Reference study:
 
+- TO TOP: immersive landscape, strong editorial scale, circular wayfinding actions, journey-based pacing, and restrained use of a high-energy accent.
 - Asana: capability-led storytelling and clear product demonstrations.
 - Linear: calm hierarchy, predictable action placement, and restrained density.
 - Atlassian Design System: semantic tokens, consistent component behavior, clear content, and accessible interaction patterns.
 - Material Design 3: semantic color roles, state communication, responsive adaptation, and contrast discipline.
 
-Only principles may be reused. Do not copy proprietary layouts, copywriting, illustrations, or component styling.
+Only principles may be reused. The Asanop composition, copy, generated landscape, route metaphor, shell, and interaction rules are original. Do not copy proprietary layouts, copywriting, illustrations, logos, or component styling.
 
 ## Layout wireframes
 
@@ -19,15 +20,14 @@ Public homepage:
 
 ```text
 Mobile                         Tablet/Desktop
-┌ Brand   CTA  Menu ┐         ┌ Brand  anchors  Sign in  CTA ┐
-├ beta label        ┤         ├ hero copy  │ product preview ┤
-│ headline          │         ├ capability trust strip       ┤
-│ copy + CTAs       │         ├ workflow steps               ┤
-│ product preview   │         ├ 2-column capability cards    ┤
-├ workflow cards    ┤         ├ small-team value panel       ┤
-├ capabilities      ┤         ├ centered final CTA           ┤
-├ team benefits     ┤         └ footer                       ┘
-└ final CTA/footer  ┘
+┌ brand            menu ┐     ┌ brand  anchors  sign in  CTA ┐
+├ editorial hero        ┤     ├ editorial hero + round CTA   ┤
+│ route CTA + proof     │     ├ product viewpoint            ┤
+│ product viewpoint    │     ├ connected journey steps      ┤
+├ journey steps        │     ├ 2-column capability cards    ┤
+├ capability cards     │     ├ immersive team landscape     ┤
+├ team landscape       │     └ round final CTA + footer     ┘
+└ final CTA/footer     ┘
 ```
 
 Authenticated shell:
@@ -43,16 +43,17 @@ Mobile                         Desktop
 ## Foundations
 
 - Colors have primitive values and semantic roles. Feature code should prefer semantic roles such as canvas, surface, ink, muted, line, brand, danger, progress, and done.
-- The product follows a 60/30/10 color model: warm neutrals carry most surfaces, deep forest-charcoal anchors navigation and text, and semantic accents carry the remaining emphasis.
-- Evergreen is reserved for primary actions, selection, and positive outcomes. Muted slate-blue means information or in-progress work, ochre means due soon or warning, and brick means destructive, blocked, or overdue.
-- Sidebar selection uses a translucent evergreen tint and a leading indicator instead of a saturated full-width block. Status and priority badges use tinted backgrounds with matching text rather than unrelated solid colors.
-- Marketing uses cream/off-white canvas, deep forest-charcoal ink, evergreen actions, and restrained terracotta/ochre/slate-blue accents.
+- The product follows a 60/30/10 color model: warm cream carries dense surfaces, deep forest anchors navigation and text, and amber carries the most important wayfinding actions.
+- Amber is the action beacon: use it for primary calls to action, the current route marker, and limited editorial emphasis. It is not a general status color.
+- Evergreen communicates structure, selection, brand continuity, and positive outcomes. Muted mineral blue means information or in-progress work, ochre means due soon or warning, and brick means destructive, blocked, or overdue.
+- Sidebar selection uses a translucent amber tint with a leading amber indicator instead of a saturated full-width block. Status and priority badges use tinted backgrounds with matching text rather than unrelated solid colors.
+- Marketing uses forest landscapes, cream editorial sections, amber wayfinding, and restrained moss/mineral/clay supporting accents.
 - Product surfaces use higher density and clearer boundaries. Strong color is reserved for actions, status, attention, and editorial emphasis.
 - Feature code must not introduce raw hex values for product UI. Add or reuse a semantic token so charts, badges, timelines, boards, and feedback states remain synchronized.
 - Spacing follows a 4px base. Use existing spacing utilities aligned to that scale.
-- Sora is the display face; Source Sans 3 is the body and interface face.
+- DM Serif Display is reserved for large marketing narratives. Sora is the product display face; Source Sans 3 is the body and interface face. Dense UI never uses the serif.
 - Standard controls are 44px high. Compact controls may use 36px only when surrounded by an equivalent accessible target.
-- Motion uses fast (140ms) and standard (220ms) durations. `prefers-reduced-motion` reduces all nonessential movement.
+- Motion uses fast (140ms), standard (220ms), and editorial reveal (650ms) durations. Reusable `useScrollReveal` behavior is one-shot and progressive: content is immediately visible when IntersectionObserver is unavailable. `prefers-reduced-motion` removes all nonessential movement.
 - Marketing content is capped at 1280px. Product content follows its view-specific density needs without causing page-level horizontal overflow.
 
 ## Component contracts
@@ -96,3 +97,19 @@ Avoid new one-off button, field, badge, modal, drawer, page-header, empty-state,
 - Empty, loading, success, error, and disabled states are intentional.
 - Homepage product demonstrations contain no personal or production data.
 - Current Chrome, Edge, Firefox, and WebKit-sized rendering receive a final smoke pass.
+
+## Asset direction and performance
+
+- Landscape imagery supports the journey metaphor and must preserve a dark text-safe field plus a visually meaningful lower horizon.
+- The current Asanop Ascent landscape is an original generated asset stored as optimized WebP. It contains no copied TO TOP assets, logos, or layout.
+- Hero imagery must remain below 250 KB when practical and should not block navigation, headings, or calls to action.
+- Reuse a single optimized asset across related immersive moments rather than shipping visually redundant variants.
+- Decorative imagery is always hidden from assistive technology. Product previews are labeled as previews and never contain production data.
+
+## Experience rules
+
+- Forest establishes place, cream supports sustained reading, and amber answers “what should I do next?”
+- The round CTA is a public/editorial motif. Dense product screens continue to use familiar rectangular controls and predictable toolbar placement.
+- Scroll reveals may clarify sequence, but navigation and interactive controls must never wait for animation.
+- Route and ascent language should remain subtle. Functional labels such as “Dashboard,” “Calendar,” and “Create task” stay literal.
+- At mobile widths, artwork yields to legibility: the scrim strengthens, the navigation collapses, and content becomes a single task-focused column.

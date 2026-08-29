@@ -19,8 +19,8 @@ describe('HomeView', () => {
       global: { stubs: { RouterLink: RouterLinkStub } },
     })
 
-    expect(wrapper.get('h1').text()).toContain('clear place')
-    expect(wrapper.text()).toContain('Create free account')
+    expect(wrapper.get('h1').text()).toContain('Find the route')
+    expect(wrapper.text()).toContain('Start your workspace')
     expect(wrapper.text()).not.toContain('Open Asanop')
   })
 
@@ -39,6 +39,6 @@ describe('HomeView', () => {
     })
 
     expect(wrapper.text()).toContain('Open Asanop')
-    expect(wrapper.text()).not.toContain('Create free account')
+    expect(wrapper.text()).not.toContain('Start your workspace')
   })
 })

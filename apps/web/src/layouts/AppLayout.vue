@@ -116,15 +116,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen lg:grid lg:h-screen lg:grid-cols-[248px_1fr] lg:overflow-hidden">
+  <div class="app-shell min-h-screen lg:grid lg:h-screen lg:grid-cols-[268px_1fr] lg:overflow-hidden">
     <!-- Mobile top bar -->
     <header
-      class="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur-sm lg:hidden"
+      class="mobile-app-bar sticky top-0 z-30 flex items-center justify-between gap-3 px-4 py-3 backdrop-blur-sm lg:hidden"
     >
       <button
         ref="menuButtonEl"
         type="button"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-charcoal hover:bg-canvas"
+        class="mobile-icon-button inline-flex h-10 w-10 items-center justify-center rounded-full"
         aria-label="Open menu"
         :aria-expanded="mobileNavOpen"
         aria-controls="app-navigation"
@@ -132,11 +132,11 @@ onUnmounted(() => {
       >
         <Menu class="h-5 w-5" />
       </button>
-      <p class="font-display text-xl font-semibold tracking-tight text-brand">Asanop</p>
+      <p class="font-display text-xl font-semibold tracking-tight text-white">Asanop</p>
       <div class="flex items-center gap-1">
         <button
           type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-muted hover:bg-canvas hover:text-charcoal"
+          class="mobile-icon-button inline-flex h-10 w-10 items-center justify-center rounded-full"
           aria-label="Search"
           @click="showSearch = true"
         >
@@ -159,18 +159,18 @@ onUnmounted(() => {
     <aside
       id="app-navigation"
       ref="mobileNavEl"
-      class="fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(100%,280px)] max-w-full -translate-x-full flex-col overflow-hidden border-r border-sidebar-border bg-sidebar px-4 py-5 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-screen lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
+      class="app-sidebar fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(100%,292px)] max-w-full -translate-x-full flex-col overflow-hidden px-4 py-5 transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-screen lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
       :class="mobileNavOpen ? 'translate-x-0' : ''"
     >
       <div class="mb-6 flex shrink-0 items-start justify-between gap-2 lg:mb-8">
         <div>
           <div class="flex items-center gap-2.5">
-            <span class="inline-flex h-8 w-8 -rotate-3 items-center justify-center rounded-[10px] bg-sidebar-active text-white shadow-sm">
+            <span class="app-brand-mark inline-flex h-9 w-9 -rotate-3 items-center justify-center rounded-full bg-sidebar-active text-charcoal shadow-sm">
               <CheckSquare class="h-4 w-4" aria-hidden="true" />
             </span>
             <p class="font-display text-[1.6rem] font-semibold tracking-tight text-white">Asanop</p>
           </div>
-          <p class="mt-1.5 font-sans text-sm text-sidebar-text">Delegate work, stay aligned</p>
+          <p class="mt-1.5 font-sans text-sm text-sidebar-text">A clear route through work</p>
         </div>
         <div class="flex items-center gap-1">
           <div class="hidden lg:block">
@@ -272,10 +272,101 @@ onUnmounted(() => {
       </div>
     </aside>
 
-    <main class="min-h-0 min-w-0 overflow-y-auto bg-canvas px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-6 lg:px-8">
-      <RouterView />
+    <main class="app-content min-h-0 min-w-0 overflow-y-auto px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 sm:py-6 lg:px-9 lg:py-8">
+      <div class="app-content-inner"><RouterView /></div>
     </main>
 
     <SearchModal v-model:open="showSearch" />
   </div>
 </template>
+
+<style scoped>
+.app-shell {
+  background: var(--color-canvas);
+}
+
+.app-sidebar {
+  position: relative;
+  isolation: isolate;
+  border-right: 1px solid var(--color-sidebar-border);
+  background:
+    radial-gradient(circle at -15% 18%, rgba(244, 183, 0, 0.16), transparent 13rem),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-sidebar) 86%, var(--color-brand)) 0%,
+      var(--color-sidebar) 55%,
+      color-mix(in srgb, var(--color-sidebar) 90%, black) 100%
+    );
+}
+
+.app-sidebar::before,
+.app-sidebar::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border: 1px solid rgba(244, 183, 0, 0.11);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.app-sidebar::before {
+  width: 270px;
+  height: 160px;
+  right: -135px;
+  top: 36%;
+  transform: rotate(-18deg);
+}
+
+.app-sidebar::after {
+  width: 360px;
+  height: 210px;
+  left: -250px;
+  bottom: 5%;
+  transform: rotate(12deg);
+}
+
+.app-brand-mark {
+  box-shadow: 0 10px 26px rgba(244, 183, 0, 0.22);
+}
+
+.mobile-app-bar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 47, 41, 0.96);
+  box-shadow: 0 8px 26px rgba(8, 47, 41, 0.14);
+}
+
+.mobile-icon-button {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: color-mix(in srgb, white 92%, var(--color-sidebar));
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-icon-button:hover {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.app-content {
+  position: relative;
+  background:
+    radial-gradient(circle at 92% -8%, rgba(244, 183, 0, 0.13), transparent 25rem),
+    radial-gradient(circle at 4% 105%, rgba(11, 106, 87, 0.08), transparent 28rem),
+    var(--color-canvas);
+}
+
+.app-content-inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1480px);
+  margin-inline: auto;
+}
+
+@media (min-width: 1536px) {
+  .app-shell {
+    grid-template-columns: 292px 1fr;
+  }
+
+  .app-content {
+    padding-inline: 3.25rem;
+  }
+}
+</style>

@@ -13,7 +13,9 @@ body {
   font-size: var(--text-body);
   line-height: var(--text-body--line-height);
   color: var(--color-charcoal);
-  background-color: var(--color-canvas);
+  background:
+    radial-gradient(circle at 90% -10%, rgba(244, 183, 0, 0.1), transparent 24rem),
+    var(--color-canvas);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -25,8 +27,8 @@ a {
 }
 
 ::selection {
-  background: var(--color-brand-soft);
-  color: var(--color-charcoal);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-ink);
 }
 
 .skip-link {
@@ -77,6 +79,20 @@ button:not(:disabled) {
   outline-offset: 2px;
 }
 
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -85,5 +101,10 @@ button:not(:disabled) {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }

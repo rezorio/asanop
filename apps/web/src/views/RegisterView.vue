@@ -37,21 +37,17 @@ async function submit() {
 </script>
 
 <template>
-  <div class="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10">
-    <div
-      class="pointer-events-none absolute inset-x-0 top-16 mx-auto h-40 w-72 rounded-full opacity-70 blur-3xl"
-      style="background: radial-gradient(circle, rgba(2, 132, 199, 0.35), transparent 70%)"
-    />
-    <div
-      class="pointer-events-none absolute inset-x-10 top-28 mx-auto h-28 w-48 rounded-full opacity-55 blur-3xl"
-      style="background: radial-gradient(circle, rgba(224, 155, 20, 0.28), transparent 70%)"
-    />
-
-    <div class="panel relative p-8">
+  <div class="auth-page">
+    <div class="auth-story">
+      <p class="auth-story-kicker">Your first step</p>
+      <p class="auth-story-title">Give the team<br><em>a clearer route.</em></p>
+      <p class="auth-story-copy">Start with a workspace, invite the people who matter, and move real work forward today.</p>
+    </div>
+    <div class="auth-card panel relative p-8">
       <RouterLink :to="{ name: 'home' }" class="mb-7 inline-flex items-center gap-2 font-display text-sm font-semibold text-brand hover:text-brand-hover">
         <span aria-hidden="true">←</span> Back to Asanop
       </RouterLink>
-      <p class="font-display text-overline uppercase tracking-wider text-sky">Get started</p>
+      <p class="font-display text-overline uppercase tracking-wider text-brand">Get started</p>
       <h1 class="mt-2 text-brand-mark">Asanop</h1>
       <p class="page-subtitle">Create an account — no OTP required</p>
 
@@ -76,7 +72,7 @@ async function submit() {
 
       <p class="mt-6 text-sm text-muted">
         Already have an account?
-        <RouterLink class="font-semibold text-sky hover:underline" :to="{ name: 'login' }">
+        <RouterLink class="font-semibold text-brand hover:underline" :to="{ name: 'login' }">
           Sign in
         </RouterLink>
       </p>

@@ -1,13 +1,15 @@
 @theme {
   /* Warm editorial primitives */
-  --color-cream-50: #fbfaf6;
-  --color-cream-100: #f5f1e8;
-  --color-slate-950: #17231f;
-  --color-emerald-700: #167458;
-  --color-coral-500: #c96648;
+  --color-cream-50: #fffdf7;
+  --color-cream-100: #f3eee3;
+  --color-slate-950: #082f29;
+  --color-emerald-700: #0b6a57;
+  --color-coral-500: #cf654c;
 
   /* Display: titles, brand, section heads */
   --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  /* Editorial: public storytelling and expressive campaign moments only */
+  --font-editorial: "DM Serif Display", Georgia, serif;
   /* Body: UI copy, forms, tables */
   --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
 
@@ -45,39 +47,41 @@
   --text-overline--font-weight: 600;
 
   /* Product neutrals — warm, quiet, and shared by every workspace surface */
-  --color-canvas: #f1f3ef;
-  --color-surface: #ffffff;
-  --color-surface-muted: #e7ebe7;
-  --color-marketing: #fbfaf6;
-  --color-ink-strong: #17231f;
+  --color-canvas: #f1ede3;
+  --color-surface: #fffdf8;
+  --color-surface-muted: #e9e6dc;
+  --color-marketing: #f5f0e6;
+  --color-ink-strong: #102e29;
 
   /* Sidebar — forest charcoal, not a competing navy theme */
-  --color-sidebar: #16231f;
-  --color-sidebar-text: #d2ded8;
-  --color-sidebar-active: #3f9a76;
-  --color-sidebar-hover: rgba(171, 211, 194, 0.09);
-  --color-sidebar-border: rgba(196, 218, 208, 0.14);
-  --color-sidebar-input: rgba(219, 235, 228, 0.07);
+  --color-sidebar: #082f29;
+  --color-sidebar-text: #c9d9d0;
+  --color-sidebar-active: #f4b700;
+  --color-sidebar-hover: rgba(245, 240, 230, 0.09);
+  --color-sidebar-border: rgba(226, 236, 229, 0.15);
+  --color-sidebar-input: rgba(245, 240, 230, 0.07);
 
   /* Ink */
-  --color-charcoal: #17231f;
-  --color-charcoal-soft: #2a3933;
-  --color-muted: #5d6c65;
-  --color-line: #d4dcd7;
-  --color-line-strong: #aab8b0;
+  --color-charcoal: #102e29;
+  --color-charcoal-soft: #28433d;
+  --color-muted: #61716b;
+  --color-line: #d8d4c9;
+  --color-line-strong: #b4b4a9;
 
   /* Brand — evergreen is the one primary action and positive color */
-  --color-brand: #167458;
-  --color-brand-hover: #105c46;
-  --color-brand-soft: #dbece4;
-  --color-brand-ring: #69a68d;
+  --color-brand: #0b6a57;
+  --color-brand-hover: #084f42;
+  --color-brand-soft: #d8e9df;
+  --color-brand-ring: #d59800;
 
   /* Supporting accents — reserved for meaning, never decoration alone */
-  --color-accent: #c96648;
-  --color-accent-soft: #f1ddd5;
-  --color-gold: #a87422;
-  --color-gold-soft: #f0e3c7;
-  --color-gold-ink: #765015;
+  --color-accent: #f4b700;
+  --color-accent-hover: #dda600;
+  --color-accent-soft: #ffefb5;
+  --color-accent-ink: #2e2a16;
+  --color-gold: #a77716;
+  --color-gold-soft: #f3e4b8;
+  --color-gold-ink: #70500e;
   --color-sky: #527787;
   --color-sky-soft: #dce8ec;
 
@@ -115,16 +119,18 @@
   /* Layout, shape, elevation, and interaction */
   --spacing-unit: 0.25rem;
   --content-max: 1280px;
-  --radius-control: 0.625rem;
-  --radius-card: 0.875rem;
-  --radius-panel: 1.125rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --radius-panel: 1.375rem;
   --control-sm: 2.25rem;
   --control-md: 2.75rem;
   --control-lg: 3.25rem;
-  --shadow-card: 0 12px 34px rgba(23, 35, 31, 0.08);
-  --shadow-editorial: 0 30px 80px rgba(23, 35, 31, 0.15), 0 3px 12px rgba(23, 35, 31, 0.07);
+  --shadow-card: 0 14px 38px rgba(8, 47, 41, 0.09);
+  --shadow-editorial: 0 32px 90px rgba(8, 47, 41, 0.2), 0 4px 14px rgba(8, 47, 41, 0.09);
   --motion-fast: 140ms;
   --motion-standard: 220ms;
+  --motion-slow: 650ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
