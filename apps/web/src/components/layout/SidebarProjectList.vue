@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { ChevronDown, FolderKanban } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/lib/api'
+import { PROJECTS_CHANGED_EVENT } from '@/lib/projectEvents'
 import type { Project } from '@/types'
 
 const auth = useAuthStore()
@@ -39,6 +40,10 @@ function isProjectActive(projectId: string) {
   return activeProjectId.value === projectId
 }
 
+function onProjectsChanged() {
+  void loadProjects()
+}
+
 watch(
   () => auth.activeWorkspaceId,
   () => {
@@ -53,6 +58,14 @@ watch(
     void loadProjects()
   },
 )
+
+onMounted(() => {
+  window.addEventListener(PROJECTS_CHANGED_EVENT, onProjectsChanged)
+})
+
+onUnmounted(() => {
+  window.removeEventListener(PROJECTS_CHANGED_EVENT, onProjectsChanged)
+})
 </script>
 
 <template>

@@ -2,6 +2,7 @@
 import { reactive, ref, watch } from 'vue'
 import AppModal from '@/components/AppModal.vue'
 import api from '@/lib/api'
+import { notifyProjectsChanged } from '@/lib/projectEvents'
 import type { Project } from '@/types'
 
 const props = defineProps<{
@@ -41,6 +42,7 @@ async function submit() {
       name: form.name.trim(),
       description: form.description.trim() || undefined,
     })
+    notifyProjectsChanged()
     emit('created', data)
     emit('update:open', false)
   } catch (e: unknown) {

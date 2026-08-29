@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import api, { cachedGet } from '@/lib/api'
@@ -10,6 +10,7 @@ import CreateTaskModal from '@/components/CreateTaskModal.vue'
 import ProjectListView from '@/components/project/ProjectListView.vue'
 import ProjectListToolbar from '@/components/project/ProjectListToolbar.vue'
 import ProjectBoardCard from '@/components/project/ProjectBoardCard.vue'
+import ProjectSettingsPanel from '@/components/project/ProjectSettingsPanel.vue'
 import { useProjectTaskBrowser } from '@/composables/useProjectTaskBrowser'
 import { STATUS_COLUMN_CLASS } from '@/lib/uiStyles'
 import { hasPermission } from '@/lib/permissions'
@@ -17,9 +18,10 @@ import AppSkeleton from '@/components/ui/AppSkeleton.vue'
 
 const auth = useAuthStore()
 const route = useRoute()
+const router = useRouter()
 const projectId = computed(() => route.params.projectId as string)
 
-const view = ref<'overview' | 'list' | 'board'>('board')
+const view = ref<'overview' | 'list' | 'board' | 'settings'>('board')
 const project = ref<Project | null>(null)
 const sections = ref<ProjectSection[]>([])
 const tasks = ref<Task[]>([])
@@ -28,14 +30,15 @@ const loading = ref(false)
 const selectedTaskId = ref<string | null>(null)
 const showCreateTask = ref(false)
 const createInitialStatus = ref<TaskStatus | null>(null)
-const savingBrief = ref(false)
 const addingSection = ref(false)
 const newSectionName = ref('')
-const briefDraft = ref('')
 const error = ref('')
 
 const canCreateTask = computed(() =>
   hasPermission(auth.activeWorkspace?.permissions, 'tasks.create'),
+)
+const canManageProject = computed(() =>
+  hasPermission(auth.activeWorkspace?.permissions, 'projects.manage'),
 )
 
 const {
@@ -84,13 +87,14 @@ async function load() {
     const [projectRes, taskRes, memberRes, sectionRes] = await Promise.all([
       cachedGet<Project>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}`),
       cachedGet<Task[]>(`/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}/tasks`),
-      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, { cacheTtlMs: 60_000 }),
+      cachedGet<WorkspaceMember[]>(`/workspaces/${auth.activeWorkspace.id}/members`, {
+        cacheTtlMs: 60_000,
+      }),
       cachedGet<ProjectSection[]>(
         `/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}/sections`,
       ),
     ])
     project.value = projectRes.data
-    briefDraft.value = projectRes.data.brief ?? ''
     tasks.value = taskRes.data
     members.value = memberRes.data
     sections.value = sectionRes.data
@@ -103,18 +107,12 @@ async function load() {
   }
 }
 
-async function saveBrief() {
-  if (!auth.activeWorkspace || !project.value) return
-  savingBrief.value = true
-  try {
-    const { data } = await api.patch<Project>(
-      `/workspaces/${auth.activeWorkspace.id}/projects/${projectId.value}`,
-      { brief: briefDraft.value.trim() || null },
-    )
-    project.value = { ...project.value, ...data, stats: project.value.stats }
-  } finally {
-    savingBrief.value = false
-  }
+function onProjectUpdated(next: Project) {
+  project.value = next
+}
+
+function onProjectArchived() {
+  void router.push({ name: 'dashboard' })
 }
 
 async function addSection() {
@@ -218,6 +216,9 @@ onMounted(load)
     <div class="page-header">
       <div class="min-w-0">
         <h1 class="page-title">{{ project?.name ?? 'Project' }}</h1>
+        <p v-if="project?.description" class="page-subtitle mt-1 line-clamp-2">
+          {{ project.description }}
+        </p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <div class="view-toggle">
@@ -244,6 +245,14 @@ onMounted(load)
             @click="view = 'list'"
           >
             List
+          </button>
+          <button
+            type="button"
+            class="view-toggle-btn"
+            :class="view === 'settings' ? 'view-toggle-btn-active' : ''"
+            @click="view = 'settings'"
+          >
+            Settings
           </button>
         </div>
       </div>
@@ -279,16 +288,18 @@ onMounted(load)
           </div>
         </section>
 
-        <section class="panel mb-6 space-y-3 p-4">
-          <h2 class="section-title">Project brief</h2>
-          <textarea
-            v-model="briefDraft"
-            class="field min-h-[140px]"
-            placeholder="Write the project brief…"
-          />
-          <button type="button" class="btn-primary" :disabled="savingBrief" @click="saveBrief">
-            {{ savingBrief ? 'Saving…' : 'Save brief' }}
-          </button>
+        <section v-if="project.brief" class="panel mb-6 space-y-2 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <h2 class="section-title">Project brief</h2>
+            <button
+              type="button"
+              class="text-xs font-semibold text-brand hover:underline"
+              @click="view = 'settings'"
+            >
+              Edit in Settings
+            </button>
+          </div>
+          <p class="whitespace-pre-wrap text-sm leading-relaxed text-muted">{{ project.brief }}</p>
         </section>
 
         <section class="panel space-y-3 p-4">
@@ -332,14 +343,35 @@ onMounted(load)
             </li>
           </ul>
           <form class="flex gap-2" @submit.prevent="addSection">
-            <input v-model="newSectionName" class="field flex-1" placeholder="New section name" required />
-            <button type="submit" class="btn-secondary inline-flex items-center gap-1" :disabled="addingSection">
+            <input
+              v-model="newSectionName"
+              class="field flex-1"
+              placeholder="New section name"
+              required
+            />
+            <button
+              type="submit"
+              class="btn-secondary inline-flex items-center gap-1"
+              :disabled="addingSection"
+            >
               <Plus class="h-4 w-4" />
               Add
             </button>
           </form>
         </section>
       </template>
+    </template>
+
+    <template v-else-if="view === 'settings'">
+      <AppSkeleton v-if="loading && !project" :rows="5" label="Loading project settings" />
+      <ProjectSettingsPanel
+        v-else-if="project && auth.activeWorkspace"
+        :workspace-id="auth.activeWorkspace.id"
+        :project="project"
+        :can-manage="canManageProject"
+        @updated="onProjectUpdated"
+        @archived="onProjectArchived"
+      />
     </template>
 
     <template v-else>
@@ -362,10 +394,7 @@ onMounted(load)
         />
 
         <template v-if="view === 'board'">
-          <div
-            v-if="!total"
-            class="panel flex flex-col items-center px-6 py-14 text-center"
-          >
+          <div v-if="!total" class="panel flex flex-col items-center px-6 py-14 text-center">
             <p class="font-medium text-charcoal">No tasks yet</p>
             <p class="mt-1 text-sm text-muted">Create a task to start filling this board.</p>
             <button
