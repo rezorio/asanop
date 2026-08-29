@@ -1,9 +1,12 @@
-import type { Task } from '@/types'
+import type { Task, TaskStatus } from '@/types'
 
 export type DueUrgency = 'overdue' | 'today' | 'soon' | 'later' | 'none'
 
-export function getDueUrgency(dueDate?: string | null): DueUrgency {
-  if (!dueDate) return 'none'
+export function getDueUrgency(
+  dueDate?: string | null,
+  status?: TaskStatus | null,
+): DueUrgency {
+  if (!dueDate || status === 'DONE') return 'none'
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const due = new Date(dueDate)
@@ -15,7 +18,10 @@ export function getDueUrgency(dueDate?: string | null): DueUrgency {
   return 'later'
 }
 
-export function formatDueLabel(dueDate?: string | null): string {
+export function formatDueLabel(
+  dueDate?: string | null,
+  status?: TaskStatus | null,
+): string {
   if (!dueDate) return 'No date'
   const date = new Date(dueDate)
   const today = new Date()
@@ -23,6 +29,13 @@ export function formatDueLabel(dueDate?: string | null): string {
   const due = new Date(date)
   due.setHours(0, 0, 0, 0)
   const diff = Math.round((due.getTime() - today.getTime()) / 86_400_000)
+
+  // Completed work is never "late" — show a calm date.
+  if (status === 'DONE') {
+    if (diff === 0) return 'Today'
+    if (diff === -1) return 'Yesterday'
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  }
 
   if (diff === 0) return 'Today'
   if (diff === 1) return 'Tomorrow'

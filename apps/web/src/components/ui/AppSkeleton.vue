@@ -26,14 +26,7 @@ withDefaults(
     </div>
 
     <div v-else-if="variant === 'dashboard'" class="space-y-4">
-      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div v-for="index in 4" :key="index" class="panel space-y-3 p-4">
-          <div class="skeleton h-3 w-24 rounded" />
-          <div class="skeleton h-8 w-20 rounded" />
-          <div class="skeleton h-3 w-32 rounded" />
-        </div>
-      </div>
-      <div class="skeleton h-48 rounded-[var(--radius-panel)]" />
+      <div class="skeleton h-44 rounded-[var(--radius-panel)]" />
       <div class="grid gap-4 lg:grid-cols-2">
         <div class="skeleton h-80 rounded-[var(--radius-panel)]" />
         <div class="skeleton h-80 rounded-[var(--radius-panel)]" />

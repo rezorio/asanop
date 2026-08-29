@@ -10,6 +10,10 @@ import {
   DEMO_WORKSPACE_NAME,
   SEED_PASSWORD,
 } from './demo/meta.data'
+import {
+  demoProjectDisplayName,
+  scheduleTaskDates,
+} from './demo/schedule'
 import { DEMO_TASKS, type AssigneeRef } from './demo/tasks.data'
 import {
   DEMO_ACTIVITY,
@@ -186,7 +190,10 @@ export async function seedDemoBoard(
   const existingProject = await prisma.project.findFirst({
     where: {
       workspaceId: workspace.id,
-      name: DEMO_PROJECT.name,
+      OR: [
+        { name: DEMO_PROJECT.name },
+        { name: { startsWith: `${DEMO_PROJECT.name} ·` } },
+      ],
     },
     include: {
       _count: {
@@ -231,10 +238,11 @@ export async function seedDemoBoard(
     await wipeDemoWorkspaceContent(prisma, workspace.id)
   }
 
+  const projectName = demoProjectDisplayName()
   const project = await prisma.project.create({
     data: {
       workspaceId: workspace.id,
-      name: DEMO_PROJECT.name,
+      name: projectName,
       description: DEMO_PROJECT.description,
       brief: DEMO_PROJECT.brief,
       createdById: owner.id,
@@ -257,8 +265,22 @@ export async function seedDemoBoard(
   const children = DEMO_TASKS.filter((t) => t.parentKey)
   const taskIdByKey = new Map<string, string>()
 
+  const statusCounts: Record<string, number> = {}
+  const statusIndexes: Record<string, number> = {}
+  for (const task of DEMO_TASKS) {
+    statusCounts[task.status] = (statusCounts[task.status] ?? 0) + 1
+  }
+
   let position = 0
   for (const task of [...parents, ...children]) {
+    const statusIndex = statusIndexes[task.status] ?? 0
+    statusIndexes[task.status] = statusIndex + 1
+    const dates = scheduleTaskDates(
+      task.status,
+      statusIndex,
+      statusCounts[task.status] ?? 1,
+    )
+
     const created = await prisma.task.create({
       data: {
         projectId: project.id,
@@ -272,8 +294,8 @@ export async function seedDemoBoard(
           `Seeded demo task for ${task.title.toLowerCase()}.`,
         status: task.status,
         priority: task.priority,
-        dueDate: dateFromOffset(task.dueInDays) ?? undefined,
-        startDate: dateFromOffset(task.startInDays) ?? undefined,
+        dueDate: dateFromOffset(dates.dueInDays) ?? undefined,
+        startDate: dateFromOffset(dates.startInDays) ?? undefined,
         assigneeId: resolveUserId(task.assigneeIndex),
         createdById: owner.id,
         position: position++,

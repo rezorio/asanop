@@ -189,7 +189,7 @@ export function groupTasks(
   const buckets = new Map<(typeof DUE_GROUP_ORDER)[number], Task[]>()
   for (const key of DUE_GROUP_ORDER) buckets.set(key, [])
   for (const task of tasks) {
-    buckets.get(getDueUrgency(task.dueDate))!.push(task)
+    buckets.get(getDueUrgency(task.dueDate, task.status))!.push(task)
   }
   return DUE_GROUP_ORDER.map((key) => ({
     id: key,

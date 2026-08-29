@@ -16,8 +16,12 @@ const emit = defineEmits<{
 
 const auth = useAuthStore()
 
-const urgency = computed(() => getDueUrgency(props.task.dueDate))
-const dueLabel = computed(() => formatDueLabel(props.task.dueDate))
+const urgency = computed(() =>
+  getDueUrgency(props.task.dueDate, props.task.status),
+)
+const dueLabel = computed(() =>
+  formatDueLabel(props.task.dueDate, props.task.status),
+)
 const isDone = computed(() => props.task.status === 'DONE')
 const isMine = computed(
   () => Boolean(auth.user?.id && props.task.assigneeId === auth.user.id),

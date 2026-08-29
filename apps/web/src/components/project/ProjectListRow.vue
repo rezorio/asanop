@@ -23,8 +23,12 @@ const statusOptions = STATUSES.map((status) => ({
   label: STATUS_LABELS[status],
 }))
 
-const urgency = computed(() => getDueUrgency(props.task.dueDate))
-const dueLabel = computed(() => formatDueLabel(props.task.dueDate))
+const urgency = computed(() =>
+  getDueUrgency(props.task.dueDate, props.task.status),
+)
+const dueLabel = computed(() =>
+  formatDueLabel(props.task.dueDate, props.task.status),
+)
 const isDone = computed(() => props.task.status === 'DONE')
 
 const railClass = computed(() => {

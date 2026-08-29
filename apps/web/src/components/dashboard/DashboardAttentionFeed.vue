@@ -16,7 +16,7 @@ const reasonMeta = {
 </script>
 
 <template>
-  <section class="panel overflow-hidden">
+  <section class="panel flex min-h-0 flex-col overflow-hidden">
     <header class="dashboard-panel-header">
       <div>
         <p class="dashboard-kicker">Priority focus</p>
@@ -25,12 +25,15 @@ const reasonMeta = {
       <span class="dashboard-header-meta">{{ items.length }} priorities</span>
     </header>
 
-    <div v-if="!items.length" class="flex flex-1 flex-col items-center justify-center px-4 py-8 text-center">
+    <div
+      v-if="!items.length"
+      class="flex flex-1 flex-col items-center justify-center px-4 py-8 text-center"
+    >
       <p class="font-medium text-charcoal">All clear</p>
       <p class="mt-1 text-sm text-muted">Nothing urgent right now.</p>
     </div>
 
-    <ul v-else class="grid gap-2 p-3">
+    <ul v-else class="grid flex-1 content-start gap-2 p-3">
       <li v-for="item in items" :key="item.id">
         <RouterLink
           :to="{ name: 'project', params: { projectId: item.projectId }, query: { taskId: item.id } }"
@@ -58,7 +61,7 @@ const reasonMeta = {
       </li>
     </ul>
 
-    <footer v-if="items.length" class="flex items-center gap-2 border-t border-line px-4 py-3 text-xs text-muted">
+    <footer v-if="items.length" class="mt-auto flex items-center gap-2 border-t border-line px-4 py-3 text-xs text-muted">
       <Sparkles class="h-3.5 w-3.5 text-gold" aria-hidden="true" />
       Ordered by urgency so the team can act quickly.
     </footer>

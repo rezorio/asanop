@@ -12,7 +12,10 @@ export type SeedTask = {
   /** Index into DEMO_TEAM_EMAILS; 'owner' = demo owner; null = unassigned */
   assigneeIndex: AssigneeRef
   sectionKey: SectionKey
-  /** Days from today (negative = past) */
+  /**
+   * Legacy relative hints — ignored at seed time.
+   * `schedule.ts` places open work from tomorrow through a 90-day deadline.
+   */
   dueInDays?: number
   startInDays?: number
   parentKey?: string
@@ -31,7 +34,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 0,
     sectionKey: 'gtm',
-    dueInDays: 3,
+    dueInDays: 8,
     startInDays: 0,
   },
   {
@@ -41,8 +44,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'design',
-    dueInDays: 5,
-    startInDays: 1,
+    dueInDays: 13,
+    startInDays: 3,
   },
   {
     key: 'onboarding-emails',
@@ -51,7 +54,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 2,
     sectionKey: 'gtm',
-    dueInDays: 4,
+    dueInDays: 10,
     startInDays: 0,
   },
   {
@@ -61,7 +64,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 3,
     sectionKey: 'gtm',
-    dueInDays: 7,
+    dueInDays: 18,
   },
   {
     key: 'testimonials',
@@ -70,7 +73,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 4,
     sectionKey: 'gtm',
-    dueInDays: 10,
+    dueInDays: 25,
   },
   {
     key: 'pricing-faq',
@@ -79,7 +82,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 5,
     sectionKey: 'gtm',
-    dueInDays: 6,
+    dueInDays: 15,
   },
   {
     key: 'influencer-outreach',
@@ -88,7 +91,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: null,
     sectionKey: 'gtm',
-    dueInDays: 12,
+    dueInDays: 30,
   },
   {
     key: 'analytics-audit',
@@ -97,8 +100,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 0,
     sectionKey: 'engineering',
-    dueInDays: 2,
-    startInDays: -1,
+    dueInDays: 5,
+    startInDays: -3,
   },
   {
     key: 'support-macros',
@@ -107,7 +110,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'launch-ops',
-    dueInDays: 8,
+    dueInDays: 20,
   },
   {
     key: 'legal-disclaimer',
@@ -116,7 +119,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 'owner',
     sectionKey: 'launch-ops',
-    dueInDays: 3,
+    dueInDays: 8,
   },
   {
     key: 'press-kit',
@@ -125,7 +128,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 2,
     sectionKey: 'gtm',
-    dueInDays: 14,
+    dueInDays: 30,
   },
   {
     key: 'affiliate-links',
@@ -134,7 +137,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 3,
     sectionKey: 'gtm',
-    dueInDays: 9,
+    dueInDays: 23,
   },
   {
     key: 'localize-es',
@@ -143,7 +146,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 4,
     sectionKey: 'gtm',
-    dueInDays: 11,
+    dueInDays: 28,
   },
   {
     key: 'localize-fr',
@@ -152,7 +155,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 5,
     sectionKey: 'gtm',
-    dueInDays: 11,
+    dueInDays: 28,
   },
   {
     key: 'webinar-deck',
@@ -161,8 +164,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 0,
     sectionKey: 'gtm',
-    dueInDays: 5,
-    startInDays: 1,
+    dueInDays: 13,
+    startInDays: 3,
   },
   {
     key: 'demo-studio',
@@ -171,7 +174,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: null,
     sectionKey: 'launch-ops',
-    dueInDays: 15,
+    dueInDays: 30,
   },
   {
     key: 'changelog',
@@ -180,7 +183,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'engineering',
-    dueInDays: 4,
+    dueInDays: 10,
   },
   {
     key: 'qa-invite-flow',
@@ -189,7 +192,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 2,
     sectionKey: 'engineering',
-    dueInDays: 2,
+    dueInDays: 5,
     startInDays: 0,
   },
   {
@@ -199,8 +202,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 'owner',
     sectionKey: 'launch-ops',
-    dueInDays: 1,
-    startInDays: -2,
+    dueInDays: 3,
+    startInDays: -6,
   },
   {
     key: 'cs-checklist',
@@ -209,7 +212,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 3,
     sectionKey: 'launch-ops',
-    dueInDays: 3,
+    dueInDays: 8,
   },
   {
     key: 'swag-samples',
@@ -226,7 +229,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 4,
     sectionKey: 'gtm',
-    dueInDays: 7,
+    dueInDays: 18,
   },
   {
     key: 'feature-flags-ga',
@@ -235,7 +238,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 5,
     sectionKey: 'engineering',
-    dueInDays: 2,
+    dueInDays: 5,
     startInDays: 0,
   },
 
@@ -247,8 +250,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 0,
     sectionKey: 'engineering',
-    dueInDays: 1,
-    startInDays: -3,
+    dueInDays: 3,
+    startInDays: -9,
   },
   {
     key: 'task-drawer',
@@ -257,8 +260,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'engineering',
-    dueInDays: 2,
-    startInDays: -4,
+    dueInDays: 5,
+    startInDays: -12,
   },
   {
     key: 'notif-badges',
@@ -267,8 +270,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 2,
     sectionKey: 'engineering',
-    dueInDays: 1,
-    startInDays: -2,
+    dueInDays: 3,
+    startInDays: -6,
   },
   {
     key: 'invite-loadtest',
@@ -277,8 +280,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 3,
     sectionKey: 'engineering',
-    dueInDays: 3,
-    startInDays: -1,
+    dueInDays: 8,
+    startInDays: -3,
   },
   {
     key: 'mobile-sidebar',
@@ -288,7 +291,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 4,
     sectionKey: 'engineering',
     dueInDays: 0,
-    startInDays: -5,
+    startInDays: -15,
   },
   {
     key: 'empty-states',
@@ -297,8 +300,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 5,
     sectionKey: 'design',
-    dueInDays: 4,
-    startInDays: -2,
+    dueInDays: 10,
+    startInDays: -6,
   },
   {
     key: 'my-tasks-filters',
@@ -307,8 +310,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 'owner',
     sectionKey: 'engineering',
-    dueInDays: 2,
-    startInDays: -3,
+    dueInDays: 5,
+    startInDays: -9,
   },
   {
     key: 'api-rate-limits',
@@ -317,8 +320,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 0,
     sectionKey: 'engineering',
-    dueInDays: 5,
-    startInDays: -1,
+    dueInDays: 13,
+    startInDays: -3,
   },
   {
     key: 'staging-seed',
@@ -327,8 +330,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'engineering',
-    dueInDays: 3,
-    startInDays: -2,
+    dueInDays: 8,
+    startInDays: -6,
   },
   {
     key: 'pg-indexes',
@@ -337,8 +340,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 2,
     sectionKey: 'engineering',
-    dueInDays: 2,
-    startInDays: -4,
+    dueInDays: 5,
+    startInDays: -12,
   },
   {
     key: 'tour-video',
@@ -347,8 +350,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 3,
     sectionKey: 'gtm',
-    dueInDays: 4,
-    startInDays: -1,
+    dueInDays: 10,
+    startInDays: -3,
   },
   {
     key: 'brand-tokens',
@@ -357,8 +360,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 4,
     sectionKey: 'design',
-    dueInDays: 6,
-    startInDays: -3,
+    dueInDays: 15,
+    startInDays: -9,
   },
   {
     key: 'partner-sso',
@@ -367,8 +370,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 5,
     sectionKey: 'engineering',
-    dueInDays: 8,
-    startInDays: -2,
+    dueInDays: 20,
+    startInDays: -6,
   },
   {
     key: 'cs-playbook',
@@ -377,7 +380,7 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: null,
     sectionKey: 'launch-ops',
-    dueInDays: 7,
+    dueInDays: 18,
     startInDays: 0,
   },
   {
@@ -387,8 +390,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 'owner',
     sectionKey: 'launch-ops',
-    dueInDays: 1,
-    startInDays: -6,
+    dueInDays: 3,
+    startInDays: -18,
   },
 
   // —— DONE / Foundation ——
@@ -399,8 +402,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 'owner',
     sectionKey: 'foundation',
-    dueInDays: -10,
-    startInDays: -14,
+    dueInDays: -30,
+    startInDays: -42,
   },
   {
     key: 'scaffold-api',
@@ -409,8 +412,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 0,
     sectionKey: 'foundation',
-    dueInDays: -14,
-    startInDays: -20,
+    dueInDays: -42,
+    startInDays: -60,
   },
   {
     key: 'auth-ship',
@@ -419,8 +422,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 1,
     sectionKey: 'foundation',
-    dueInDays: -12,
-    startInDays: -16,
+    dueInDays: -36,
+    startInDays: -48,
   },
   {
     key: 'invite-mock',
@@ -429,8 +432,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 2,
     sectionKey: 'foundation',
-    dueInDays: -9,
-    startInDays: -13,
+    dueInDays: -27,
+    startInDays: -39,
   },
   {
     key: 'kanban-mvp',
@@ -439,8 +442,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 3,
     sectionKey: 'foundation',
-    dueInDays: -8,
-    startInDays: -12,
+    dueInDays: -24,
+    startInDays: -36,
   },
   {
     key: 'comments-activity',
@@ -449,8 +452,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 4,
     sectionKey: 'foundation',
-    dueInDays: -7,
-    startInDays: -11,
+    dueInDays: -21,
+    startInDays: -33,
   },
   {
     key: 'member-table',
@@ -459,8 +462,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 5,
     sectionKey: 'foundation',
-    dueInDays: -6,
-    startInDays: -10,
+    dueInDays: -18,
+    startInDays: -30,
   },
   {
     key: 'docker-pg',
@@ -469,8 +472,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 'owner',
     sectionKey: 'foundation',
-    dueInDays: -15,
-    startInDays: -18,
+    dueInDays: -45,
+    startInDays: -54,
   },
   {
     key: 'shared-package',
@@ -479,8 +482,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 0,
     sectionKey: 'foundation',
-    dueInDays: -13,
-    startInDays: -17,
+    dueInDays: -39,
+    startInDays: -51,
   },
   {
     key: 'auth-screens',
@@ -489,8 +492,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 1,
     sectionKey: 'foundation',
-    dueInDays: -11,
-    startInDays: -15,
+    dueInDays: -33,
+    startInDays: -45,
   },
   {
     key: 'project-list',
@@ -499,8 +502,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 2,
     sectionKey: 'foundation',
-    dueInDays: -10,
-    startInDays: -14,
+    dueInDays: -30,
+    startInDays: -42,
   },
   {
     key: 'assignee-dropdown',
@@ -509,8 +512,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'HIGH',
     assigneeIndex: 3,
     sectionKey: 'foundation',
-    dueInDays: -5,
-    startInDays: -9,
+    dueInDays: -15,
+    startInDays: -27,
   },
   {
     key: 'priority-field',
@@ -519,8 +522,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 4,
     sectionKey: 'foundation',
-    dueInDays: -4,
-    startInDays: -8,
+    dueInDays: -12,
+    startInDays: -24,
   },
   {
     key: 'due-date-picker',
@@ -529,8 +532,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'MEDIUM',
     assigneeIndex: 5,
     sectionKey: 'foundation',
-    dueInDays: -3,
-    startInDays: -7,
+    dueInDays: -9,
+    startInDays: -21,
   },
   {
     key: 'favicon',
@@ -539,8 +542,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'NONE',
     assigneeIndex: null,
     sectionKey: 'foundation',
-    dueInDays: -2,
-    startInDays: -5,
+    dueInDays: -6,
+    startInDays: -15,
   },
   {
     key: 'seed-workmates',
@@ -549,8 +552,8 @@ export const DEMO_TASKS: SeedTask[] = [
     priority: 'LOW',
     assigneeIndex: 'owner',
     sectionKey: 'foundation',
-    dueInDays: -1,
-    startInDays: -3,
+    dueInDays: -3,
+    startInDays: -9,
   },
 
   // —— Subtasks ——
@@ -562,7 +565,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 0,
     sectionKey: 'gtm',
     parentKey: 'announce-copy',
-    dueInDays: 1,
+    dueInDays: 3,
   },
   {
     key: 'announce-copy-cta',
@@ -572,7 +575,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 2,
     sectionKey: 'gtm',
     parentKey: 'announce-copy',
-    dueInDays: 2,
+    dueInDays: 5,
   },
   {
     key: 'keyboard-nav',
@@ -582,8 +585,8 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 0,
     sectionKey: 'engineering',
     parentKey: 'keyboard-shortcuts',
-    dueInDays: 1,
-    startInDays: -2,
+    dueInDays: 3,
+    startInDays: -6,
   },
   {
     key: 'keyboard-hotkeys',
@@ -593,7 +596,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 0,
     sectionKey: 'engineering',
     parentKey: 'keyboard-shortcuts',
-    dueInDays: 1,
+    dueInDays: 3,
   },
   {
     key: 'drawer-fields',
@@ -603,8 +606,8 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 1,
     sectionKey: 'engineering',
     parentKey: 'task-drawer',
-    dueInDays: 2,
-    startInDays: -1,
+    dueInDays: 5,
+    startInDays: -3,
   },
   {
     key: 'drawer-deps',
@@ -614,7 +617,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 1,
     sectionKey: 'engineering',
     parentKey: 'task-drawer',
-    dueInDays: 2,
+    dueInDays: 5,
   },
   {
     key: 'rollback-db',
@@ -624,7 +627,7 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 'owner',
     sectionKey: 'launch-ops',
     parentKey: 'rollback-runbook',
-    dueInDays: 1,
+    dueInDays: 3,
   },
   {
     key: 'rollback-flags',
@@ -635,7 +638,7 @@ export const DEMO_TASKS: SeedTask[] = [
     sectionKey: 'launch-ops',
     parentKey: 'rollback-runbook',
     dueInDays: 0,
-    startInDays: -1,
+    startInDays: -3,
   },
   {
     key: 'beta-schedule',
@@ -645,8 +648,8 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 'owner',
     sectionKey: 'launch-ops',
     parentKey: 'beta-calls',
-    dueInDays: 1,
-    startInDays: -3,
+    dueInDays: 3,
+    startInDays: -9,
   },
   {
     key: 'beta-notes',
@@ -656,6 +659,6 @@ export const DEMO_TASKS: SeedTask[] = [
     assigneeIndex: 4,
     sectionKey: 'launch-ops',
     parentKey: 'beta-calls',
-    dueInDays: 3,
+    dueInDays: 8,
   },
 ]

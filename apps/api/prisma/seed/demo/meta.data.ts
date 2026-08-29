@@ -27,12 +27,13 @@ export const DEMO_PENDING_INVITE_EMAILS = [
 ] as const
 
 export const DEMO_PROJECT = {
+  /** Base name; force-seed uses a dated display name from schedule.ts */
   name: 'Product launch',
   description:
-    'Seeded board with a heavy task load to demo assignment, sections, and status flow.',
+    'Fresh seeded board: kickoff tomorrow with a hard ~3-month deadline. Open work is scheduled forward so nothing starts overdue.',
   brief: `## Launch brief
 
-Ship Asanop GA with a polished board experience, GTM assets, and a rollback-ready ops plan.
+Kickoff is tomorrow. Ship Asanop GA by the end of a 90-day runway — foundation prep is already checked off, active engineering and design are in flight, and GTM/ops land through launch week.
 
 ### Goals
 - Stable kanban + list + timeline for the core workflow
